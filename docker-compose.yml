@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: askp
+      POSTGRES_PASSWORD: askp
+      POSTGRES_DB: askp
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
