@@ -27,7 +27,7 @@ MANIFEST
 venv/
 env/
 ENV/
-.python-version
+# Note: .python-version IS committed — it pins the project's Python version for uv/contributors.
 
 # ---- Package managers ----
 # uv
