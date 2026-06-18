@@ -1,0 +1,43 @@
+# Local development infrastructure for ASKP.
+#
+#   docker compose up -d          # start Postgres + Redis in the background
+#   docker compose ps             # check health
+#   docker compose down           # stop (add -v to also wipe data)
+#
+# These defaults match .env.example, so the app connects out of the box.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: askp-postgres
+    environment:
+      POSTGRES_USER: askp
+      POSTGRES_PASSWORD: askp
+      POSTGRES_DB: askp
+    ports:
+      - "5432:5432"
+    volumes:
+      - askp_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U askp -d askp"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: askp-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - askp_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  askp_pgdata:
+  askp_redisdata:

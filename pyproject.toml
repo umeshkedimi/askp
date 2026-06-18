@@ -14,6 +14,11 @@ dependencies = [
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
     "structlog>=24.4",
+    "sqlmodel>=0.0.22",
+    "asyncpg>=0.30",
+    "greenlet>=3.1",
+    "alembic>=1.14",
+    "redis>=5.2",
 ]
 
 [project.urls]
@@ -27,7 +32,9 @@ askp = "askp.cli:main"
 [dependency-groups]
 dev = [
     "pytest>=8.3",
+    "pytest-asyncio>=0.25",
     "httpx>=0.28",
+    "aiosqlite>=0.20",
     "ruff>=0.9",
     "mypy>=1.14",
 ]
@@ -56,3 +63,4 @@ files = ["src", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra -q"
+asyncio_mode = "auto"
