@@ -10,6 +10,18 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Added
+- **Reference implementation — Increment 1: data layer.**
+  - Async SQLAlchemy (SQLModel) engine + session factory; `get_session` dependency.
+  - Async Redis client (revocation list / counters store) with health check.
+  - Readiness probe (`/ready`) now verifies PostgreSQL and Redis connectivity.
+  - Tenancy models: `Organization` and `Project` (UUID PKs, TIMESTAMPTZ timestamps,
+    org-scoped unique project slug).
+  - Alembic async migrations + initial schema (verified zero drift via `alembic check`).
+  - `docker-compose.yml` for local Postgres + Redis.
+- **Reference implementation — Increment 0: project foundation.**
+  - uv project, `src/` layout, Pydantic Settings config, structlog logging.
+  - FastAPI app-factory with lifespan; `/health` and `/ready` endpoints; `askp serve` CLI.
+  - Test suite (pytest), lint (ruff), and type-checking (mypy --strict).
 - **Batch 1 — Foundational design package.**
   - Product Vision (`docs/vision/product-vision.md`).
   - Problem Statement (`docs/vision/problem-statement.md`).
