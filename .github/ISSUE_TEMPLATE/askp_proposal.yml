@@ -1,0 +1,55 @@
+name: 📜 ASKP Proposal (protocol change)
+description: Propose a change or addition to the ASKP protocol specification.
+title: "proposal: <short description>"
+labels: ["proposal", "spec", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for changes to the **protocol** (`spec/`). Because others implement `askp/vN`,
+        protocol changes go through review (see [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md)).
+        Editorial fixes (typos, clarifications that don't change meaning) can skip this and go straight to a PR.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph describing the proposed change.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve? What can't be done today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Detailed proposal
+      description: The specific normative change. Reference spec sections (e.g. §5 scope grammar).
+    validations:
+      required: true
+  - type: dropdown
+    id: compatibility
+    attributes:
+      label: Backward compatibility
+      options:
+        - Backward-compatible (new provider/scope/optional claim/clarification)
+        - Backward-incompatible (would require a new major version, askp/v2)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security & privacy impact
+      description: Does this affect any core invariant (credential confidentiality, isolation, revocation, etc.)?
+    validations:
+      required: true

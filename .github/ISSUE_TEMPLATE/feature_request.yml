@@ -1,0 +1,48 @@
+name: ✨ Feature request
+description: Suggest an enhancement to the ASKP implementation, SDKs, or docs.
+title: "feat: <short description>"
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For changes to the **protocol itself** (`spec/`), please use the **ASKP Proposal** template instead.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What problem does this solve? Who is affected?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Gateway
+        - Issuer
+        - Vault
+        - Policy / budgets / scopes
+        - Provider adapter (new provider)
+        - Python SDK
+        - JavaScript SDK
+        - MCP integration
+        - Observability
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

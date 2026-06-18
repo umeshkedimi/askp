@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Discussions
+    url: https://github.com/umeshkedimi/askp/discussions
+    about: Ask questions, share ideas, and discuss ASKP with the community.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/umeshkedimi/askp/security/advisories/new
+    about: Please report security issues privately — do NOT open a public issue. See SECURITY.md.

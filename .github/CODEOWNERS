@@ -1,0 +1,18 @@
+# ASKP code owners
+# These owners are requested for review automatically when matching files change.
+# See https://docs.github.com/articles/about-code-owners
+
+# Default owner for everything in the repo.
+*                       @umeshkedimi
+
+# The protocol specification is the most sensitive surface — always reviewed by the lead.
+/spec/                  @umeshkedimi
+
+# Design documents.
+/docs/                  @umeshkedimi
+
+# Project meta / governance.
+/GOVERNANCE.md          @umeshkedimi
+/SECURITY.md            @umeshkedimi
+/CONTRIBUTING.md        @umeshkedimi
+/LICENSE                @umeshkedimi

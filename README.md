@@ -64,6 +64,18 @@ See [`docs/README.md`](docs/README.md) for the full deliverables roadmap.
 🚧 **Pre-alpha — design phase.** The protocol is a working draft (`askp/v1`, draft-01).
 Nothing here is stable yet. We are designing in the open.
 
+## Contributing
+
+ASKP is built in public and welcomes contributors — especially review of and proposals against
+the protocol spec. Start here:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — workflow, Conventional Commits, DCO sign-off, the ASKP Proposal process
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — Contributor Covenant 2.1
+- [GOVERNANCE.md](GOVERNANCE.md) — how decisions are made
+- [SECURITY.md](SECURITY.md) — report a vulnerability privately (please do **not** open a public issue)
+
 ## License
 
-To be finalized (target: Apache-2.0). See roadmap.
+Licensed under the [Apache License 2.0](LICENSE). Contributions are accepted under the same
+license. The Apache-2.0 patent grant is deliberate: it suits a project intended to become an
+open standard.
