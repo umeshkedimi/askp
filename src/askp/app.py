@@ -22,7 +22,9 @@ from fastapi import FastAPI
 from askp import __version__
 from askp.api import health
 from askp.config import Settings, get_settings
+from askp.db import Database
 from askp.logging import configure_logging, get_logger
+from askp.redis import create_redis
 
 
 @asynccontextmanager
@@ -31,14 +33,17 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     settings: Settings = app.state.settings
     log = get_logger(__name__)
-    log.info(
-        "askp.startup",
-        environment=settings.environment.value,
-        version=__version__,
-    )
-    # Increment 1: open the database engine and Redis pool here.
+
+    # Construct datastore clients. Both are lazy — they don't connect here — so startup never
+    # fails just because Postgres/Redis aren't up yet; the readiness probe reports the truth.
+    app.state.db = Database(settings.database_url)
+    app.state.redis = create_redis(settings.redis_url)
+    log.info("askp.startup", environment=settings.environment.value, version=__version__)
+
     yield
-    # Increment 1: dispose of the database engine and Redis pool here.
+
+    await app.state.db.dispose()
+    await app.state.redis.aclose()
     log.info("askp.shutdown")
 
 
