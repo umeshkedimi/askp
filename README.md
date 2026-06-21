@@ -39,7 +39,7 @@ See [`docs/vision/problem-statement.md`](docs/vision/problem-statement.md) for t
 | Artifact | Lives in | What it is |
 |---|---|---|
 | **The ASKP Protocol** | [`spec/`](spec/) | A language-agnostic, versioned specification. Anyone can implement it in any language and interoperate. |
-| **The Reference Implementation** | `services/` *(later batches)* | A Python / FastAPI implementation: Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
+| **The Reference Implementation** | [`cmd/`](cmd/), [`internal/`](internal/) | A stdlib-first **Go** implementation: Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
 
 The protocol is the headline. The implementation proves it.
 
