@@ -9,21 +9,19 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 
 ## [Unreleased]
 
-### Changed
-- **Reference implementation pivoted from Python to Go (stdlib-first).** The protocol
-  specification and design docs are language-agnostic and are unaffected. The earlier Python
-  Increments 0–1 (FastAPI / SQLModel / Alembic) were removed; the data layer will be re-ported
-  to Go as Increment 1.
-
 ### Added
-- **Reference implementation — Increment 0: project foundation (Go).**
-  - Go module `github.com/umeshkedimi/askp` (Go 1.24), `cmd/` + `internal/` layout.
-  - Environment-based configuration (`ASKP_` prefix), standard library only.
-  - Structured logging via `log/slog` (text in development, JSON elsewhere).
-  - `net/http` server with method-aware routing (Go 1.22+) and graceful shutdown on
-    SIGINT/SIGTERM; `/health` (liveness) and `/ready` (readiness) endpoints.
-  - `askp serve` command; tests via `net/http/httptest`.
-  - `docker-compose.yml` for local Postgres + Redis (used from Increment 1).
+- **Reference implementation — Increment 1: data layer.**
+  - Async SQLAlchemy (SQLModel) engine + session factory; `get_session` dependency.
+  - Async Redis client (revocation list / counters store) with health check.
+  - Readiness probe (`/ready`) now verifies PostgreSQL and Redis connectivity.
+  - Tenancy models: `Organization` and `Project` (UUID PKs, TIMESTAMPTZ timestamps,
+    org-scoped unique project slug).
+  - Alembic async migrations + initial schema (verified zero drift via `alembic check`).
+  - `docker-compose.yml` for local Postgres + Redis.
+- **Reference implementation — Increment 0: project foundation.**
+  - uv project, `src/` layout, Pydantic Settings config, structlog logging.
+  - FastAPI app-factory with lifespan; `/health` and `/ready` endpoints; `askp serve` CLI.
+  - Test suite (pytest), lint (ruff), and type-checking (mypy --strict).
 - **Batch 1 — Foundational design package.**
   - Product Vision (`docs/vision/product-vision.md`).
   - Problem Statement (`docs/vision/problem-statement.md`).
