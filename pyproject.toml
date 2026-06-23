@@ -19,6 +19,8 @@ dependencies = [
     "greenlet>=3.1",
     "alembic>=1.14",
     "redis>=5.2",
+    "pyjwt>=2.10",
+    "cryptography>=44.0",
 ]
 
 [project.urls]

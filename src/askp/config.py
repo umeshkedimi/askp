@@ -67,6 +67,32 @@ class Settings(BaseSettings):
         description="Redis connection URL (revocation list, rate-limit + budget counters).",
     )
 
+    # --- Token issuance (Increment 2) ---
+    # The ``iss`` and ``aud`` claims every Access Token carries (spec §4.2). In a real
+    # deployment these are the public URLs of this Issuer and its Gateway.
+    issuer: str = Field(
+        default="https://localhost:8000",
+        description="Issuer identity; becomes the JWT 'iss' claim.",
+    )
+    gateway_audience: str = Field(
+        default="https://localhost:8000/gateway",
+        description="Intended Gateway audience; becomes the JWT 'aud' claim.",
+    )
+    # Spec §4.2: Access Tokens SHOULD have a lifetime <= 15 minutes. We default to 10.
+    access_token_ttl_seconds: int = Field(
+        default=600,
+        ge=1,
+        le=900,
+        description="Access Token lifetime in seconds (spec recommends <= 900).",
+    )
+    # PEM file holding the Ed25519 *private* signing key. If unset, an ephemeral key is
+    # generated at startup — fine for dev/tests, never for production (tokens won't survive a
+    # restart and can't be verified by other instances).
+    signing_key_path: str | None = Field(
+        default=None,
+        description="Path to an Ed25519 private key in PEM format. Generated ephemerally if unset.",
+    )
+
     @property
     def is_production(self) -> bool:
         return self.environment == Environment.production
