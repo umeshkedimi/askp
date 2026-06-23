@@ -67,7 +67,7 @@ def test_rejects_alg_none() -> None:
         {"iss": ISSUER, "aud": AUDIENCE, "sub": "x", "org": "o", "proj": "p",
          "scopes": [], "jti": "at_x",
          "iat": datetime.now(UTC), "exp": datetime.now(UTC) + timedelta(minutes=5)},
-        key=None,
+        key="",
         algorithm="none",
     )
     with pytest.raises(jwt.InvalidAlgorithmError):

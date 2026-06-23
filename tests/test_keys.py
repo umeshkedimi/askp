@@ -1,5 +1,7 @@
 """Tests for Ed25519 signing-key management (askp.security.keys)."""
 
+from pathlib import Path
+
 import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -24,7 +26,7 @@ def test_generate_produces_usable_key() -> None:
     assert isinstance(key.public_key.public_bytes_raw(), bytes)
 
 
-def test_kid_is_deterministic_for_same_key(tmp_path) -> None:
+def test_kid_is_deterministic_for_same_key(tmp_path: Path) -> None:
     # A given key must always hash to the same kid, so a reload (or another instance) agrees.
     original = keys.generate()
     pem_file = tmp_path / "signing.pem"
@@ -34,7 +36,7 @@ def test_kid_is_deterministic_for_same_key(tmp_path) -> None:
     assert reloaded.kid == original.kid
 
 
-def test_load_pem_rejects_non_ed25519(tmp_path) -> None:
+def test_load_pem_rejects_non_ed25519(tmp_path: Path) -> None:
     # An RSA key in the PEM must fail loudly rather than silently mis-signing.
     rsa_pem = generate_private_key(public_exponent=65537, key_size=2048).private_bytes(
         encoding=serialization.Encoding.PEM,

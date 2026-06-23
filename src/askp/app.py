@@ -17,14 +17,20 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+import httpx
 from fastapi import FastAPI
 
 from askp import __version__
 from askp.api import health
 from askp.config import Settings, get_settings
 from askp.db import Database
+from askp.gateway import errors as gateway_errors
+from askp.gateway.credentials import EnvCredentialResolver
+from askp.gateway.router import proxy
 from askp.logging import configure_logging, get_logger
 from askp.redis import create_redis
+from askp.security.revocation import RevocationList
+from askp.security.tokens import TokenIssuer
 
 
 @asynccontextmanager
@@ -38,10 +44,20 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # fails just because Postgres/Redis aren't up yet; the readiness probe reports the truth.
     app.state.db = Database(settings.database_url)
     app.state.redis = create_redis(settings.redis_url)
+
+    # Gateway dependencies. The TokenIssuer holds the signing key (verify side on the Gateway);
+    # the RevocationList shares the Redis client; the credential resolver is the Vault stand-in;
+    # the httpx client is reused across requests for connection pooling to upstream Providers.
+    app.state.token_issuer = TokenIssuer.from_settings(settings)
+    app.state.revocations = RevocationList(app.state.redis)
+    app.state.credentials = EnvCredentialResolver()
+    app.state.http = httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=10.0))
+
     log.info("askp.startup", environment=settings.environment.value, version=__version__)
 
     yield
 
+    await app.state.http.aclose()
     await app.state.db.dispose()
     await app.state.redis.aclose()
     log.info("askp.shutdown")
@@ -67,5 +83,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
 
     app.include_router(health.router)
+
+    # The Gateway proxy is a raw passthrough route (not in the OpenAPI schema): it forwards
+    # provider-native request shapes under a provider-scoped path (spec §6.1).
+    app.add_route("/v1/providers/{provider}/{native_path:path}", proxy, methods=["POST"])
+    app.add_exception_handler(gateway_errors.GatewayError, gateway_errors.gateway_error_handler)
 
     return app
