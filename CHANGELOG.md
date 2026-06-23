@@ -10,6 +10,14 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Added
+- **Reference implementation — Increment 5: control plane (Issuer + Admin APIs).**
+  - `POST /v1/tokens` — mints scoped Access Tokens via the Issuer (OAuth-style response).
+  - `PUT`/`DELETE /v1/admin/providers/{provider}/credential` — write/rotate/delete Vault
+    credentials; write-only (no GET) per §7.4.
+  - `POST /v1/admin/revocations` — revoke a `jti` and/or token-family `tf` (§7.3).
+  - All gated by `require_admin` (constant-time bearer-key check, `ASKP_ADMIN_API_KEY`); fails
+    closed with 503 when unconfigured. Placeholder for real principal auth (a later batch).
+  - Config: `admin_api_key`.
 - **Reference implementation — Increment 4: the Vault (encrypted credentials).**
   - Envelope encryption (AES-256-GCM): a master KEK wraps a per-credential DEK, with
     `AAD="<org>:<provider>"` binding each ciphertext to its tenant (`askp.security.encryption`).
