@@ -93,6 +93,16 @@ class Settings(BaseSettings):
         description="Path to an Ed25519 private key in PEM format. Generated ephemerally if unset.",
     )
 
+    # --- Credential Vault (Increment 4) ---
+    # Base64-encoded 32-byte master key (KEK) that wraps per-credential data keys. Required in
+    # production; an ephemeral key is generated for dev/tests when unset (credentials then do not
+    # survive a restart). Generate one with: python -c "import askp.security.encryption as e;
+    # print(e.generate_kek())".
+    vault_kek: str | None = Field(
+        default=None,
+        description="Base64-encoded 32-byte master key (KEK) for the credential Vault.",
+    )
+
     @property
     def is_production(self) -> bool:
         return self.environment == Environment.production
