@@ -28,13 +28,31 @@ SQLITE_MEMORY_DSN = "sqlite+aiosqlite://"
 
 
 class FakeRedis:
-    """Minimal async stand-in: the readiness probe only calls ``ping``/``aclose``."""
+    """In-memory async stand-in for the bits of Redis our code uses.
+
+    Enough for the readiness probe (``ping``/``aclose``) and the revocation list
+    (``set``/``exists``). Expiry is not simulated in real time; the recorded TTL is kept in
+    ``ttls`` so tests can assert on it.
+    """
+
+    def __init__(self) -> None:
+        self._store: dict[str, str] = {}
+        self.ttls: dict[str, int] = {}
 
     async def ping(self) -> bool:
         return True
 
     async def aclose(self) -> None:
         return None
+
+    async def set(self, name: str, value: str, ex: int | None = None) -> bool:
+        self._store[name] = value
+        if ex is not None:
+            self.ttls[name] = ex
+        return True
+
+    async def exists(self, *names: str) -> int:
+        return sum(1 for name in names if name in self._store)
 
 
 @pytest.fixture
