@@ -103,6 +103,14 @@ class Settings(BaseSettings):
         description="Base64-encoded 32-byte master key (KEK) for the credential Vault.",
     )
 
+    # --- Admin / Issuer control plane (Increment 5) ---
+    # Bearer key gating the admin and token-issuance endpoints. A stand-in for real principal
+    # authentication (a later batch). When unset, those endpoints are disabled (503) — never open.
+    admin_api_key: str | None = Field(
+        default=None,
+        description="Bearer key for the admin and token-issuance APIs; disabled (503) if unset.",
+    )
+
     @property
     def is_production(self) -> bool:
         return self.environment == Environment.production

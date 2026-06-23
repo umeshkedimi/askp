@@ -21,7 +21,7 @@ import httpx
 from fastapi import FastAPI
 
 from askp import __version__
-from askp.api import health
+from askp.api import health, tokens
 from askp.config import Settings, get_settings
 from askp.db import Database
 from askp.gateway import errors as gateway_errors
@@ -87,6 +87,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
 
     app.include_router(health.router)
+    app.include_router(tokens.router)
 
     # The Gateway proxy is a raw passthrough route (not in the OpenAPI schema): it forwards
     # provider-native request shapes under a provider-scoped path (spec §6.1).
