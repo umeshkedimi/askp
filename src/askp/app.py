@@ -21,7 +21,7 @@ import httpx
 from fastapi import FastAPI
 
 from askp import __version__
-from askp.api import health, tokens
+from askp.api import admin, health, tokens
 from askp.config import Settings, get_settings
 from askp.db import Database
 from askp.gateway import errors as gateway_errors
@@ -54,7 +54,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     cipher = Cipher.from_settings(
         vault_kek=settings.vault_kek, is_production=settings.is_production
     )
-    app.state.credentials = Vault(session_factory=app.state.db.session_factory, cipher=cipher)
+    vault = Vault(session_factory=app.state.db.session_factory, cipher=cipher)
+    app.state.vault = vault  # concrete Vault for the admin API (put/delete)
+    app.state.credentials = vault  # CredentialResolver seam for the Gateway (resolve)
     app.state.http = httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=10.0))
 
     log.info("askp.startup", environment=settings.environment.value, version=__version__)
@@ -88,6 +90,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(tokens.router)
+    app.include_router(admin.router)
 
     # The Gateway proxy is a raw passthrough route (not in the OpenAPI schema): it forwards
     # provider-native request shapes under a provider-scoped path (spec §6.1).

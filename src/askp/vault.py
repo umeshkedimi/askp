@@ -73,6 +73,17 @@ class Vault:
             return None
         return self._cipher.decrypt(row.ciphertext, aad=self._aad(org, provider))
 
+    async def delete(self, *, org: str, provider: str) -> bool:
+        """Remove the credential for ``(org, provider)``. Returns False if there was none."""
+
+        async with self._session_factory() as session:
+            row = await self._fetch(session, org=org, provider=provider)
+            if row is None:
+                return False
+            await session.delete(row)
+            await session.commit()
+            return True
+
     @staticmethod
     async def _fetch(
         session: AsyncSession, *, org: str, provider: str
