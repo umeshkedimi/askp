@@ -10,6 +10,17 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Added
+- **Reference implementation — Increment 3: the Gateway (pre-flight pipeline + proxy).**
+  - Scope grammar + matching with `*` wildcards and default-deny (`askp.security.scopes`, §5).
+  - Redis-backed revocation list with self-expiring entries (`askp.security.revocation`, §7.3).
+  - Provider registry mapping native paths to capabilities and holding upstream URL + auth
+    conventions (OpenAI Bearer, Anthropic `x-api-key`) (`askp.gateway.providers`, §5.4/§6.1).
+  - Proxy route `POST /v1/providers/{provider}/{path}` running the §6.3 pipeline (verify token →
+    revocation → resolve operation → scope authorize → resolve credential in-org → stream
+    upstream), substituting the provider credential for the ASKP token (INV-1) and passing SSE
+    through unbuffered (§6.6).
+  - Stable §8 error vocabulary; `CredentialResolver` Protocol with an env-backed placeholder
+    pending the Vault.
 - **Reference implementation — Increment 2: the Issuer (token core).**
   - Ed25519 (`EdDSA`) signing keys with a deterministic `kid`; PEM loading or ephemeral
     generation (`askp.security.keys`).
