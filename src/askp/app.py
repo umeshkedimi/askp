@@ -25,12 +25,13 @@ from askp.api import health
 from askp.config import Settings, get_settings
 from askp.db import Database
 from askp.gateway import errors as gateway_errors
-from askp.gateway.credentials import EnvCredentialResolver
 from askp.gateway.router import proxy
 from askp.logging import configure_logging, get_logger
 from askp.redis import create_redis
+from askp.security.encryption import Cipher
 from askp.security.revocation import RevocationList
 from askp.security.tokens import TokenIssuer
+from askp.vault import Vault
 
 
 @asynccontextmanager
@@ -50,7 +51,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # the httpx client is reused across requests for connection pooling to upstream Providers.
     app.state.token_issuer = TokenIssuer.from_settings(settings)
     app.state.revocations = RevocationList(app.state.redis)
-    app.state.credentials = EnvCredentialResolver()
+    cipher = Cipher.from_settings(
+        vault_kek=settings.vault_kek, is_production=settings.is_production
+    )
+    app.state.credentials = Vault(session_factory=app.state.db.session_factory, cipher=cipher)
     app.state.http = httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=10.0))
 
     log.info("askp.startup", environment=settings.environment.value, version=__version__)
