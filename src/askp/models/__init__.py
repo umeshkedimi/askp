@@ -6,6 +6,7 @@ are discovered.
 """
 
 from askp.models.base import Base
+from askp.models.credential import ProviderCredential
 from askp.models.tenancy import Organization, Project
 
-__all__ = ["Base", "Organization", "Project"]
+__all__ = ["Base", "Organization", "Project", "ProviderCredential"]
