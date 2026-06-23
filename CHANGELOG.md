@@ -10,6 +10,15 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Added
+- **Reference implementation — Increment 4: the Vault (encrypted credentials).**
+  - Envelope encryption (AES-256-GCM): a master KEK wraps a per-credential DEK, with
+    `AAD="<org>:<provider>"` binding each ciphertext to its tenant (`askp.security.encryption`).
+  - `ProviderCredential` model + Alembic migration 0002 — stores ciphertext only, keyed by a
+    unique `(org, provider)`.
+  - `askp.vault.Vault`: `put()` encrypts and upserts (write/rotate); `resolve()` decrypts
+    in-boundary and satisfies the Gateway's `CredentialResolver` protocol, replacing the
+    Increment 3 environment-variable placeholder.
+  - Config: `vault_kek` (required in production; ephemeral in dev).
 - **Reference implementation — Increment 3: the Gateway (pre-flight pipeline + proxy).**
   - Scope grammar + matching with `*` wildcards and default-deny (`askp.security.scopes`, §5).
   - Redis-backed revocation list with self-expiring entries (`askp.security.revocation`, §7.3).
