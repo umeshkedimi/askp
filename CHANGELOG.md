@@ -10,6 +10,13 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Added
+- **Reference implementation — Increment 2: the Issuer (token core).**
+  - Ed25519 (`EdDSA`) signing keys with a deterministic `kid`; PEM loading or ephemeral
+    generation (`askp.security.keys`).
+  - `TokenIssuer` mints short-lived (≤15 min), `askp_at_`-prefixed JWT Access Tokens carrying
+    the spec §4.2 claim set, and verifies them with the algorithm pinned to `EdDSA`
+    (rejecting `alg:none` and alg-confusion forgeries).
+  - Config: `issuer`, `gateway_audience`, `access_token_ttl_seconds`, `signing_key_path`.
 - **Reference implementation — Increment 1: data layer.**
   - Async SQLAlchemy (SQLModel) engine + session factory; `get_session` dependency.
   - Async Redis client (revocation list / counters store) with health check.
