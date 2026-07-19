@@ -1,0 +1,9 @@
+.git
+.github
+bin/
+*.md
+docs/
+spec/
+.env
+.env.*
+!.env.example

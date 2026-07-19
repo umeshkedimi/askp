@@ -1,58 +1,20 @@
-# ---- Python ----
-__pycache__/
-*.py[cod]
-*$py.class
+# ---- Go ----
+# Compiled binaries / build output
+bin/
+/askp
+*.exe
+*.dll
 *.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# ---- Virtual environments ----
-.venv/
-venv/
-env/
-ENV/
-# Note: .python-version IS committed — it pins the project's Python version for uv/contributors.
-
-# ---- Package managers ----
-# uv
-.uv/
-# pip
-pip-log.txt
-pip-delete-this-directory.txt
-
-# ---- Testing / coverage ----
-.pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.tox/
-.nox/
-coverage.xml
-*.cover
-.hypothesis/
-
-# ---- Type checkers / linters ----
-.mypy_cache/
-.dmypy.json
-.ruff_cache/
-.pyre/
-.pytype/
+*.dylib
+# Test binaries and coverage
+*.test
+*.out
+coverage.txt
+# Go workspace file
+go.work
+go.work.sum
+# Vendored dependencies (not used; modules are the source of truth)
+vendor/
 
 # ---- Environment & secrets (NEVER commit) ----
 .env

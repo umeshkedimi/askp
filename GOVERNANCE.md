@@ -9,7 +9,7 @@ process for how it evolves.
 ASKP is two things under one roof:
 
 - **The protocol** — a versioned specification in [`spec/`](spec/) that anyone may implement.
-- **The reference implementation** — code in `services/` and `sdks/` that conforms to the protocol.
+- **The reference implementation** — the Go code in `cmd/`, `internal/`, `pkg/` (and future SDKs in `sdk/`) that conforms to the protocol.
 
 The protocol is intended to outlive any single implementation. Changes to it are held to a
 higher bar than changes to the implementation.

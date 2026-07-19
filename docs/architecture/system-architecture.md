@@ -245,17 +245,24 @@ ASKP is observable by design (a stated NFR). Across components:
 
 | Concern | Choice |
 |---|---|
-| Language / framework | Python · FastAPI (async) |
-| Data modeling / ORM | SQLModel · Pydantic v2 |
+| Language / framework | Go · Gin |
+| Data modeling / ORM | GORM (PostgreSQL driver, pgx underneath) |
 | Database | PostgreSQL |
-| Cache / hot-path state | Redis |
-| Outbound HTTP to providers | httpx (async, streaming) |
-| Background jobs | ARQ or Celery (usage aggregation, exports) |
-| Tokens | JWT (JWS, EdDSA/RS256) |
-| Migrations | Alembic |
-| Containerization | Docker; Kubernetes-ready |
+| Cache / hot-path state | Redis (`go-redis`) |
+| Outbound HTTP to providers | `net/http` (streaming, connection-pooled) |
+| Background jobs | Goroutines / worker pools (usage aggregation, exports) |
+| Tokens | JWT (JWS, EdDSA/RS256) via `golang-jwt` |
+| Migrations | `golang-migrate` (versioned SQL) |
+| Config | Viper (`ASKP_` env prefix) |
+| Logging | Zap (structured) |
+| Containerization | Docker (distroless); Kubernetes-ready |
 | Observability | Prometheus · Grafana · OpenTelemetry |
-| Testing | Pytest |
+| API documentation | Swagger / OpenAPI (`swaggo`) |
+| Testing | `go test` · testify · Testcontainers |
+
+> The technology mapping is a property of the **reference implementation**, not the
+> protocol. The protocol (`spec/`) is language-agnostic; any conformant implementation in
+> any language interoperates.
 
 ## 11. What this document deliberately defers
 

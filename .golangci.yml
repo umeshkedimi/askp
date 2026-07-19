@@ -1,0 +1,30 @@
+# golangci-lint configuration (v2 schema).
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  # The "standard" set enables errcheck, govet, ineffassign, staticcheck, unused.
+  default: standard
+  enable:
+    - misspell
+    - revive
+    - unconvert
+    - gosec
+  exclusions:
+    rules:
+      # Test files may ignore errors and use weaker checks for brevity.
+      - path: _test\.go
+        linters:
+          - errcheck
+          - gosec
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/umeshkedimi/askp

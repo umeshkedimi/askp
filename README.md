@@ -39,7 +39,7 @@ See [`docs/vision/problem-statement.md`](docs/vision/problem-statement.md) for t
 | Artifact | Lives in | What it is |
 |---|---|---|
 | **The ASKP Protocol** | [`spec/`](spec/) | A language-agnostic, versioned specification. Anyone can implement it in any language and interoperate. |
-| **The Reference Implementation** | `services/` *(later batches)* | A Python / FastAPI implementation: Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
+| **The Reference Implementation** | `cmd/`, `internal/`, `pkg/` | A Go implementation (Gin · GORM · Redis): Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
 
 The protocol is the headline. The implementation proves it.
 
@@ -56,6 +56,25 @@ The protocol is the headline. The implementation proves it.
 5. [System Architecture](docs/architecture/system-architecture.md)
 
 See [`docs/README.md`](docs/README.md) for the full deliverables roadmap.
+
+---
+
+## Quickstart (reference implementation)
+
+The Go reference implementation is being built increment by increment. Today you can run the
+service skeleton:
+
+```bash
+# Requires Go 1.26+
+cp .env.example .env          # optional; sensible defaults otherwise
+make run                      # or: go run ./cmd/askp serve
+
+curl localhost:8000/health    # liveness  → {"status":"ok"}
+curl localhost:8000/ready     # readiness → {"status":"ready","checks":{...}}
+curl localhost:8000/metrics   # Prometheus metrics
+```
+
+Common tasks: `make build`, `make test`, `make lint`, `make docker`.
 
 ---
 

@@ -9,7 +9,31 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 
 ## [Unreleased]
 
+### Changed
+- **Reference implementation relanguaged to Go.** The reference implementation is now written
+  in **Go** (Gin · GORM · Redis · Viper · Zap · Prometheus · OpenTelemetry) and lives in
+  `cmd/`, `internal/`, and `pkg/`. The protocol spec (`spec/`) and design docs are unchanged
+  and remain language-agnostic; only the implementation language and its production tooling
+  changed. The previous Python/FastAPI implementation (Increments 0–5 below) is retired but
+  preserved in git history under the `python-reference-final` tag. Docs, `.env.example`, the
+  architecture technology mapping (§10), and contribution/governance references were updated
+  to match the Go layout.
+
 ### Added
+- **Reference implementation (Go) — Increment 0: project foundation.**
+  - Go module `github.com/umeshkedimi/askp` with a clean-architecture layout
+    (`cmd/askp`, `internal/{config,logging,middleware,metrics,api,app,cli}`, `pkg/apierrors`).
+  - Viper-backed configuration (`ASKP_` env prefix) with fail-closed validation; Zap
+    structured logging (JSON in prod, console in dev).
+  - Gin HTTP server via a dependency-injected app factory: request-id / recovery / logging
+    middleware, Prometheus `/metrics`, `/health` (dependency-free liveness) and `/ready`
+    (checker-based readiness), graceful shutdown, and the `askp serve` cobra command.
+  - Stable error vocabulary (`pkg/apierrors`, spec §8) as an importable, framework-agnostic
+    package.
+  - Tooling: multi-stage distroless Dockerfile, `golangci-lint` config, Makefile, and a
+    GitHub Actions CI workflow (build · vet · test · lint).
+
+### Added (Python reference — retired, kept for history)
 - **Reference implementation — Increment 5: control plane (Issuer + Admin APIs).**
   - `POST /v1/tokens` — mints scoped Access Tokens via the Issuer (OAuth-style response).
   - `PUT`/`DELETE /v1/admin/providers/{provider}/credential` — write/rotate/delete Vault
