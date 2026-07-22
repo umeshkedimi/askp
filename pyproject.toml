@@ -1,0 +1,69 @@
+[project]
+name = "askp"
+version = "0.0.1"
+description = "ASKP — AI Secure Key Protocol. OAuth for AI provider access: scoped, short-lived tokens instead of raw provider keys."
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Umesh Kedimi" }]
+keywords = ["ai", "security", "api-gateway", "oauth", "llm", "openai", "anthropic", "tokens"]
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "structlog>=24.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/umeshkedimi/askp"
+Repository = "https://github.com/umeshkedimi/askp"
+Documentation = "https://github.com/umeshkedimi/askp/tree/main/docs"
+
+[project.scripts]
+askp = "askp.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "pytest-cov>=6.0",
+    "httpx>=0.28",
+    "ruff>=0.9",
+    "mypy>=1.14",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/askp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# A pragmatic, learning-friendly rule set: errors, pyflakes, imports, bugbear, upgrades.
+select = ["E", "F", "I", "B", "UP", "W"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit"]
+addopts = "-ra -q"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src/askp"]
+omit = ["*/migrations/*"]
+
+[tool.coverage.report]
+show_missing = true

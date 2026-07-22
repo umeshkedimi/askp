@@ -10,16 +10,40 @@ and SDKs once released. The **protocol** is versioned separately as `askp/vN` wi
 ## [Unreleased]
 
 ### Changed
-- **Reference implementation relanguaged to Go.** The reference implementation is now written
-  in **Go** (Gin · GORM · Redis · Viper · Zap · Prometheus · OpenTelemetry) and lives in
-  `cmd/`, `internal/`, and `pkg/`. The protocol spec (`spec/`) and design docs are unchanged
-  and remain language-agnostic; only the implementation language and its production tooling
-  changed. The previous Python/FastAPI implementation (Increments 0–5 below) is retired but
-  preserved in git history under the `python-reference-final` tag. Docs, `.env.example`, the
-  architecture technology mapping (§10), and contribution/governance references were updated
-  to match the Go layout.
+- **Reference implementation permanently relanguaged back to Python — fresh, from-scratch
+  rewrite, not a resurrection.** After a second Go attempt (Increment 0 only), the reference
+  implementation is being rebuilt from scratch in **Python** (FastAPI · SQLAlchemy 2.0 · Redis ·
+  PyJWT · `cryptography` · OpenTelemetry), living in `src/askp/`. This is a deliberate,
+  permanent decision, not another pivot: the new design consciously reuses validated pieces of
+  the earlier Python effort (scope grammar, envelope-encryption scheme, error vocabulary,
+  gateway pipeline order, test-isolation patterns) while closing gaps it left behind — a real
+  Policy Engine, rate limiting and budget enforcement, usage/audit recording, JWKS and key
+  rotation, refresh tokens, a per-org admin auth model, a consistent production-secrets guard,
+  and CI/coverage gates from day one. The Go scaffold is retired but preserved in git history
+  under the `go-reference-final` tag, the same way `python-reference-final` preserved the
+  earlier Python effort. The protocol spec (`spec/`) and design docs are unchanged and remain
+  language-agnostic; only the implementation language and its production maturity change. Docs,
+  `.env.example`, and contribution/governance references were updated to match the Python layout.
 
 ### Added
+- **Reference implementation (Python, fresh rewrite) — Increment 0: project foundation.**
+  - `uv`-managed project (`pyproject.toml`, `hatchling` build backend), `src/askp/` layout,
+    Python 3.13, Ruff (lint + format) and `mypy --strict` (with the `pydantic.mypy` plugin).
+  - `pydantic-settings`-backed configuration (`ASKP_` env prefix); `config/secrets.py`
+    introduces `resolve_secret()`, a single production-secret guard every future
+    secret-bearing component (signing keys, vault KEK, ...) must route through — closing a
+    real inconsistency in the earlier Python effort where only one of two such components
+    actually failed closed in production.
+  - `structlog`-based logging (JSON in staging/production, console in development), also
+    capturing uvicorn's own log lines through the same processors.
+  - FastAPI app-factory (`create_app`) with lifespan; `/health` (dependency-free liveness) and
+    `/ready` (checker-based readiness, empty registry for now — Increment 1 wires in
+    Postgres/Redis checks); `askp serve` CLI.
+  - Multi-stage `Dockerfile` (uv-installed deps layer, non-root runtime user, container
+    healthcheck) and a GitHub Actions CI workflow (lint · typecheck · unit tests + coverage)
+    that runs from this increment onward, not retrofitted later.
+
+### Added (Go reference — retired, kept for history)
 - **Reference implementation (Go) — Increment 0: project foundation.**
   - Go module `github.com/umeshkedimi/askp` with a clean-architecture layout
     (`cmd/askp`, `internal/{config,logging,middleware,metrics,api,app,cli}`, `pkg/apierrors`).

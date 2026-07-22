@@ -22,7 +22,7 @@ ASKP is deliberately split into a **protocol** and a **reference implementation*
 |---|---|---|
 | **The protocol** | [`spec/`](spec/) | Must be language-agnostic, normative (RFC 2119), and implementable from the text alone. Changes go through an **ASKP Proposal** (see below). |
 | **Design docs** | [`docs/`](docs/) | Must stay consistent with the six locked decisions and the spec. |
-| **Reference implementation** | `cmd/`, `internal/`, `pkg/`, `sdk/` *(later)* | Must conform to the spec and pass the conformance checklist. |
+| **Reference implementation** | `src/askp/`, `sdk/` *(later)* | Must conform to the spec and pass the conformance checklist. |
 
 ## ASKP Proposals (changes to the protocol)
 
@@ -98,8 +98,8 @@ will be asked to amend.
 - **Docs:** Markdown, wrapped at a readable width, Mermaid for diagrams, American English,
   cross-link related docs.
 - **Spec:** RFC 2119 keywords in ALL CAPS only when normative; keep it implementation-neutral.
-- **Code:** Go 1.26+, `gofmt`/`goimports` for formatting, `golangci-lint` for linting,
-  `go test` for tests. Idiomatic, interface-driven, context-aware; run `make lint test`
+- **Code:** Python 3.13+, `ruff` for formatting and linting, `mypy --strict` for type-checking,
+  `pytest` for tests. Idiomatic, fully async, fully typed; run `make lint typecheck test`
   before opening a PR.
 
 ## Reporting bugs & requesting features

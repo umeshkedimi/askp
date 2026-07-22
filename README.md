@@ -39,7 +39,7 @@ See [`docs/vision/problem-statement.md`](docs/vision/problem-statement.md) for t
 | Artifact | Lives in | What it is |
 |---|---|---|
 | **The ASKP Protocol** | [`spec/`](spec/) | A language-agnostic, versioned specification. Anyone can implement it in any language and interoperate. |
-| **The Reference Implementation** | `cmd/`, `internal/`, `pkg/` | A Go implementation (Gin · GORM · Redis): Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
+| **The Reference Implementation** | `src/askp/` | A Python implementation (FastAPI · SQLAlchemy 2.0 · Redis): Issuer, Vault, Gateway, Policy Engine. Proves the protocol and gives you something to run on day one. |
 
 The protocol is the headline. The implementation proves it.
 
@@ -61,20 +61,19 @@ See [`docs/README.md`](docs/README.md) for the full deliverables roadmap.
 
 ## Quickstart (reference implementation)
 
-The Go reference implementation is being built increment by increment. Today you can run the
-service skeleton:
+The Python reference implementation is being built increment by increment. Today you can run
+the service skeleton:
 
 ```bash
-# Requires Go 1.26+
+# Requires Python 3.13+ and uv (https://docs.astral.sh/uv/)
 cp .env.example .env          # optional; sensible defaults otherwise
-make run                      # or: go run ./cmd/askp serve
+uv run askp serve             # or: make dev (also starts Postgres/Redis via docker compose)
 
 curl localhost:8000/health    # liveness  → {"status":"ok"}
 curl localhost:8000/ready     # readiness → {"status":"ready","checks":{...}}
-curl localhost:8000/metrics   # Prometheus metrics
 ```
 
-Common tasks: `make build`, `make test`, `make lint`, `make docker`.
+Common tasks: `make test`, `make lint`, `make typecheck`, `make fmt`.
 
 ---
 

@@ -245,20 +245,20 @@ ASKP is observable by design (a stated NFR). Across components:
 
 | Concern | Choice |
 |---|---|
-| Language / framework | Go · Gin |
-| Data modeling / ORM | GORM (PostgreSQL driver, pgx underneath) |
+| Language / framework | Python (async) · FastAPI · Uvicorn/uvloop |
+| Data modeling / ORM | SQLAlchemy 2.0 typed declarative (`asyncpg` underneath) |
 | Database | PostgreSQL |
-| Cache / hot-path state | Redis (`go-redis`) |
-| Outbound HTTP to providers | `net/http` (streaming, connection-pooled) |
-| Background jobs | Goroutines / worker pools (usage aggregation, exports) |
-| Tokens | JWT (JWS, EdDSA/RS256) via `golang-jwt` |
-| Migrations | `golang-migrate` (versioned SQL) |
-| Config | Viper (`ASKP_` env prefix) |
-| Logging | Zap (structured) |
-| Containerization | Docker (distroless); Kubernetes-ready |
+| Cache / hot-path state | Redis (`redis.asyncio`) |
+| Outbound HTTP to providers | `httpx.AsyncClient` (streaming, connection-pooled) |
+| Background jobs | `asyncio` tasks / bounded queue (usage aggregation, exports) |
+| Tokens | JWT (JWS, EdDSA) via `PyJWT` + `cryptography` |
+| Migrations | Alembic (versioned SQL) |
+| Config | `pydantic-settings` (`ASKP_` env prefix) |
+| Logging | `structlog` (structured) |
+| Containerization | Docker (multi-stage, non-root); Kubernetes-ready |
 | Observability | Prometheus · Grafana · OpenTelemetry |
-| API documentation | Swagger / OpenAPI (`swaggo`) |
-| Testing | `go test` · testify · Testcontainers |
+| API documentation | OpenAPI (native FastAPI generation) |
+| Testing | `pytest` · `pytest-asyncio` · `testcontainers-python` |
 
 > The technology mapping is a property of the **reference implementation**, not the
 > protocol. The protocol (`spec/`) is language-agnostic; any conformant implementation in

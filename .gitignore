@@ -1,20 +1,20 @@
-# ---- Go ----
-# Compiled binaries / build output
-bin/
-/askp
-*.exe
-*.dll
-*.so
-*.dylib
-# Test binaries and coverage
-*.test
-*.out
-coverage.txt
-# Go workspace file
-go.work
-go.work.sum
-# Vendored dependencies (not used; modules are the source of truth)
-vendor/
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+build/
+dist/
+
+# ---- Test / lint / type-check caches ----
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
 
 # ---- Environment & secrets (NEVER commit) ----
 .env

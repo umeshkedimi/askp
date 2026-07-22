@@ -1,32 +1,19 @@
-BINARY := askp
-PKG := ./...
+.PHONY: dev test lint fmt typecheck
 
-.PHONY: help build run test vet lint fmt tidy docker
+dev:
+	docker compose up -d
+	uv run uvicorn askp.app:create_app --factory --reload --host 127.0.0.1 --port 8000
 
-help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
+test:
+	uv run pytest --cov
 
-build: ## Compile the askp binary into ./bin
-	go build -o bin/$(BINARY) ./cmd/askp
+lint:
+	uv run ruff check .
+	uv run ruff format --check .
 
-run: ## Run the ASKP server locally
-	go run ./cmd/askp serve
+fmt:
+	uv run ruff check --fix .
+	uv run ruff format .
 
-test: ## Run tests with the race detector
-	go test -race $(PKG)
-
-vet: ## Run go vet
-	go vet $(PKG)
-
-lint: ## Run golangci-lint
-	golangci-lint run
-
-fmt: ## Format and tidy imports
-	go fmt $(PKG)
-
-tidy: ## Tidy go.mod / go.sum
-	go mod tidy
-
-docker: ## Build the container image
-	docker build -f deploy/docker/Dockerfile -t askp:dev .
+typecheck:
+	uv run mypy --strict src tests

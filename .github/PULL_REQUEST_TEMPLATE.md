@@ -8,7 +8,7 @@
 
 - [ ] Documentation (`docs/`)
 - [ ] Protocol specification (`spec/`) — note: non-editorial changes require an accepted ASKP Proposal
-- [ ] Reference implementation (`cmd/`, `internal/`, `pkg/`)
+- [ ] Reference implementation (`src/askp/`)
 - [ ] SDK (`sdk/`)
 - [ ] Project meta (CI, governance, templates)
 
